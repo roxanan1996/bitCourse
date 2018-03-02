@@ -1,0 +1,7 @@
+Windows Registry Editor Version 5.00
+
+   
+[HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\LocalDumps\CrashRandom.exe]
+"DumpFolder"=hex(2):64,00,3a,00,5c,00,64,00,75,00,6d,00,70,00,73,00,00,00
+"DumpCount"=dword:00000002
+"DumpType"=dword:00000002

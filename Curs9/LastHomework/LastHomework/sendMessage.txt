@@ -1,0 +1,101 @@
+char url[100];
+
+		int recvRes = recv(acceptSocket, url, 100, 0);
+
+		if (recvRes == SOCKET_ERROR) {
+			wprintf(L"ERROR AT RECEIVING URL MESSAGE  %d\n\n", WSAGetLastError());
+			return -2;
+		}
+
+		printf("%s\n\n\n\n", url);
+
+		// aflare nume fisier html :)
+		char *token;
+		token = strtok(url, "/");
+		token = strtok(NULL, "/");
+		token = strtok(token, " ");
+		printf("s a trimis%slala\n", token);
+
+
+		// deschidere fisier si citire tot in message[]
+		HANDLE hFileConfig = CreateFile(L"E:\\Bitdefender\\Curs9\\LastHomework\\Debug\\httpservice.config", GENERIC_READ,
+			FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+			NULL, OPEN_EXISTING, 0, NULL);
+		if (hFileConfig == INVALID_HANDLE_VALUE) {
+			wprintf(L"Nu a putut fi deschis fisierul httpServiceConfig lasteroor :: %d\n", GetLastError());
+			return -1;
+		}
+
+		BOOL bRead = FALSE;
+		DWORD dwRead = 0;
+		char pathToFile[100];
+
+		bRead = ReadFile(hFileConfig, (LPVOID) pathToFile, 51, &dwRead, NULL);
+		if (!bRead) {
+			printf("EROARE LA CITIRE DIN CONFIG\n");
+			return - 1;
+		}
+
+		printf("%d", dwRead);
+
+		pathToFile[dwRead] = '\0';
+		//strcat(pathToFile, '\0');
+		printf("lala %s\n", pathToFile);
+
+		
+		//wprintf(L"%s\n\n", confText);
+
+		//std::wcout << L"confText pur: " << confText << L"\n";
+		//wchar_t pathToFile[100];
+		//wcscpy(pathToFile, confText);
+
+		//wprintf(L"doar calea %s\n", pathToFile);
+		//std::wcout << L"doar calea " << pathToFile << L"\n";
+		strcat(pathToFile, token);
+		strcat(pathToFile, ".txt");
+
+		//wprintf(L"calea cat\re html :D\n\n");
+		std::cout << "bla" << pathToFile << "caca\n\n";
+
+		size_t size = strlen(pathToFile);
+
+		printf("%d", size);
+		wchar_t* wArr = new wchar_t[size];
+		for (size_t i = 0; i < size; ++i) {
+			wArr[i] = pathToFile[i];
+		}
+
+		wArr[size] = '\0';
+		printf("%d\n", wcslen(wArr));
+		wprintf(L"%s\n", wArr);
+
+		//std::wcout << L"a message" << wArr << L"\n";
+		HANDLE hHtml = CreateFile(wArr, GENERIC_READ,
+			FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+			NULL, OPEN_EXISTING, 0, NULL);
+
+		if (hHtml == INVALID_HANDLE_VALUE) {
+			wprintf(L"Nu a putut fi deschis html %d\n", GetLastError());
+			return -1;
+		}
+
+		char message[1000];// = "HTTP/1.1 200 Okay\r\nContent-Type: text/html; charset=ISO-8859-4 \r\n\r\n<h1>Hello, client! Welcome to the Virtual Machine Web..</h1>";
+		BOOL htmlRead = FALSE;
+		htmlRead = ReadFile(hHtml, message, 1000, &dwRead, NULL);
+		
+		if (!htmlRead) {
+			printf("EROARE LA CITIRE DIN html\n");
+			return -1;
+		}
+		
+		message[dwRead] = '\0';
+		printf("mesajul %s\n", message);
+		int length = strlen(message) + 1; // Plus 1 for  null terminator
+		int send_res = send(acceptSocket, message, length, 0); // Flag = 0
+		Sleep(5000);
+		if (send_res == SOCKET_ERROR) {
+			wprintf(L"ERROR AT SENDIND MESSAGE  %d\n\n", WSAGetLastError());
+			return -2;
+		}
+
+		printf("S A TRIIIIMIS \n");

@@ -1,0 +1,4 @@
+HTTP/1.1 200 Okay
+Content-Type: text/html; charset=ISO-8859-4
+
+<h1>Hello, client! Welcome to GMAIL HAHAHA</h1>
